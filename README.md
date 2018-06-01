@@ -14,5 +14,11 @@ This code base provides all the necessary pieces to reproduce the main results o
     + [Matplotlib](https://matplotlib.org/)(>=2.0.0)
     + [Seaborn](https://seaborn.pydata.org/)(>=0.8.0)
 * Morpheus
-    + [Morpheus](https://imc.zih.tu-dresden.de/wiki/morpheus/doku.php) is user-friendly software designed for simulating and studying multicellular systems
+    + [Morpheus](https://imc.zih.tu-dresden.de/wiki/morpheus/doku.php) (Morpheus 2.0 RC2 aka version 1.9.3).Morpheus is user-friendly software designed for simulating and studying multicellular systems
+    
+ # Simulation
+ All the simulation on one cell and studying dynamical system equations have been done in python. You can refer to 'BMP_Noggin' Notebook and run the experiment for different sets of parameters and reproduce figure 2 of the paper. 
+ 
+ All the simulations in the multicellular system have been done with Morpheus. Morpheus is user-friendly software designed for simulating and studying multicellular systems [Starruß et al. 2014](https://academic.oup.com/bioinformatics/article/30/9/1331/234757).
+    
     
