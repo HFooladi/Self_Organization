@@ -9,7 +9,10 @@ This code base provides all the necessary pieces to reproduce the main results o
 
 * Python 
     + [Python (3.6)](https://www.python.org/downloads/)
-    + [Numpy(>=1.13.1)](http://www.numpy.org/)
-* Item 2
-    + Item 2a
-    + Item 2b
+    + [Numpy](http://www.numpy.org/)(>=1.13.1)
+    + [Scipy](https://www.scipy.org/)(>=1.0.0)
+    + [Matplotlib](https://matplotlib.org/)(>=2.0.0)
+    + [Seaborn](https://seaborn.pydata.org/)(>=0.8.0)
+* Morpheus
+    + [Morpheus](https://imc.zih.tu-dresden.de/wiki/morpheus/doku.php) is user-friendly software designed for simulating and studying multicellular systems
+    
