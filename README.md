@@ -14,6 +14,6 @@ trophectoderm, responses to altered culture conditions and micropattern diameter
 and unexpected spotted forms of the germ layers under certain conditions. This model
 provides a basis for in-silico modeling of self-organization.
 
-For reading the full paper, you can follow this link [Paper_Link](https://www.biorxiv.org/content/early/2018/01/01/241604)
+For reading the full paper, you can follow this [link](https://www.biorxiv.org/content/early/2018/01/01/241604)
 
-This code base provides all the necessary pieces to reproduce the main results of Self-organization paper. If you have any questions, please email [Email_Address](fooladi.hosein@gmail.com)
+This code base provides all the necessary pieces to reproduce the main results of Self-organization paper. If you have any questions, please email [fooladi.hosein@gmail.com](fooladi.hosein@gmail.com)
