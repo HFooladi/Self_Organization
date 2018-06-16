@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<MorpheusModel version="3">
+    <Description>
+        <Details>This Model is based on 2 papers below for modeling BMP signaling and its effect on germ layer specification
+
+A defined platform of human peri-gastrulation-like biological fate patterning reveals coordination between Reaction-Diffusion and Positional-Information(2017)
+
+A Balance between Secreted Inhibitors and Edge Sensing Controls Gastruloid Self-Organization(2016)
+
+Parsa Moradi
+Hossein Fooladi</Details>
+        <Title>Model_D_25_1250</Title>
+    </Description>
+    <Global>
+        <Constant symbol="a_1" value="0.1" name="BMP production"/>
+        <Constant symbol="beta_2" value="20" name="Noggin Activation"/>
+        <Constant symbol="a_2" value="0.1" name="Noggin production"/>
+        <Constant symbol="beta_1" value="20" name="BMP Activation"/>
+        <Constant symbol="r1" value="0.1" name="BMP inhibition"/>
+        <Constant symbol="r2" value="1" name="binding ratio"/>
+        <Field symbol="b" value="5 + rand_norm(0,0.3)" name="BMP">
+            <Diffusion rate="25" unit="µm²/s"/>
+        </Field>
+        <Field symbol="nog" value="isCell*(0.1+  rand_uni(0,0.005))" name="Noggin">
+            <Diffusion rate="1250" unit="µm²/s"/>
+        </Field>
+        <Constant symbol="isCell" value="0.0"/>
+        <System solver="heun" time-step="0.02">
+            <DiffEqn symbol-ref="b">
+                <Expression>timeScale*(isCell*(beta_1*(b^n1)/(1 + b^n1 + nog^n1 + r1 * b^n1 * nog ^n1) - b +  a_1)- deg1*b*(1-isCell)+ rand_norm(0,noise))</Expression>
+            </DiffEqn>
+            <DiffEqn symbol-ref="nog">
+                <Expression>timeScale*(isCell*lambda*(beta_2*r2*(b^n2)/(1+r2*(b^n2))- nog +a_2) - deg2*nog*(1-isCell)+rand_norm(0,noise))
+</Expression>
+            </DiffEqn>
+            <Constant symbol="noise" value="1e-5" name="noise"/>
+            <Constant symbol="n2" value="2"/>
+            <Constant symbol="n1" value="2"/>
+            <Constant symbol="deg1" value="0.1"/>
+            <Constant symbol="deg2" value="0.0333"/>
+        </System>
+        <Constant symbol="lambda" value="0.4" name="degredation ratio"/>
+        <Constant symbol="timeScale" value="1"/>
+    </Global>
+    <Space>
+        <Lattice class="square">
+            <Neighborhood>
+                <Order>2</Order>
+            </Neighborhood>
+            <Size symbol="size" value="273, 273, 0"/>
+            <Domain boundary-type="constant">
+                <Image path="Domain.tiff"/>
+            </Domain>
+            <NodeLength unit="micron" value="2"/>
+            <!--    <Disabled>
+        <BoundaryConditions>
+            <Condition boundary="x" type="constant"/>
+            <Condition boundary="y" type="constant"/>
+            <Condition boundary="-x" type="constant"/>
+            <Condition boundary="-y" type="constant"/>
+        </BoundaryConditions>
+    </Disabled>
+-->
+        </Lattice>
+        <SpaceSymbol symbol="l"/>
+    </Space>
+    <Time>
+        <StartTime value="0"/>
+        <StopTime symbol="end" value="60"/>
+        <TimeSymbol symbol="time"/>
+        <RandomSeed value="12345321"/>
+    </Time>
+    <CellTypes>
+        <CellType class="biological" name="stemCells">
+            <Constant symbol="isCell" value="1.0"/>
+            <VolumeConstraint target="150" strength="1" name="cellVol"/>
+            <Property symbol="avgBMP" value="0" name="average BMP in cell"/>
+            <Property symbol="avgNog" value="0" name="average Noggin"/>
+            <CellReporter name="Average BMP">
+                <Input value="b"/>
+                <Output symbol-ref="avgBMP" mapping="average"/>
+            </CellReporter>
+            <CellReporter name="Average Noggin">
+                <Input value="nog"/>
+                <Output symbol-ref="avgNog" mapping="average"/>
+            </CellReporter>
+        </CellType>
+        <CellType class="medium" name="medium">
+            <Constant symbol="isCell" value="0.0"/>
+        </CellType>
+    </CellTypes>
+    <CellPopulations>
+        <Population size="1000" type="stemCells">
+            <!--    <Disabled>
+        <InitProperty symbol-ref="b">
+            <Expression>0.4 +rand_norm(0,0.1)</Expression>
+        </InitProperty>
+    </Disabled>
+-->
+            <!--    <Disabled>
+        <InitProperty symbol-ref="nog">
+            <Expression>rand_uni(0,0.1)</Expression>
+        </InitProperty>
+    </Disabled>
+-->
+            <InitCircle mode="regular" random_displacement="5.0" number-of-cells="0">
+                <Dimensions radius="200" center="0.0, 0.0, 0.0"/>
+            </InitCircle>
+        </Population>
+    </CellPopulations>
+    <Analysis>
+        <Gnuplotter time-step="1.0">
+            <Plot>
+                <Field symbol-ref="b" min="0.0" max="10">
+                    <ColorMap>
+                        <Color value="0.0" color="white"/>
+                        <Color value="0.2" color="light-blue"/>
+                        <Color value="0.4" color="blue"/>
+                        <Color value="0.6" color="yellow"/>
+                        <Color value="0.8" color="green"/>
+                        <Color value="1.0" color="red"/>
+                    </ColorMap>
+                </Field>
+            </Plot>
+            <Terminal name="png"/>
+            <Plot>
+                <Field symbol-ref="nog" min="0.0" max="10">
+                    <ColorMap>
+                        <Color value="0.0" color="white"/>
+                        <Color value="0.2" color="light-blue"/>
+                        <Color value="0.4" color="blue"/>
+                        <Color value="0.6" color="yellow"/>
+                        <Color value="0.8" color="green"/>
+                        <Color value="1.0" color="red"/>
+                    </ColorMap>
+                </Field>
+            </Plot>
+            <Plot>
+                <Cells value="avgBMP" min="0.0" max="10">
+                    <ColorMap>
+                        <Color value="0.0" color="light-blue"/>
+                        <Color value="1.0" color="red"/>
+                        <Color value="0.5" color="yellow"/>
+                        <Color value="0.7" color="green"/>
+                    </ColorMap>
+                </Cells>
+            </Plot>
+            <Plot>
+                <Cells value="avgNog" min="0.0" max="10">
+                    <ColorMap>
+                        <Color value="0.0" color="light-blue"/>
+                        <Color value="1.0" color="red"/>
+                        <Color value="0.5" color="yellow"/>
+                        <Color value="0.7" color="orange"/>
+                    </ColorMap>
+                </Cells>
+            </Plot>
+        </Gnuplotter>
+        <!--    <Disabled>
+        <Logger time-step="10">
+            <Input>
+                <Symbol symbol-ref="b"/>
+            </Input>
+            <Output>
+                <TextOutput file-name="BMP" file-numbering="time" file-format="csv" file-separation="time" separator="tab"/>
+            </Output>
+        </Logger>
+    </Disabled>
+-->
+    </Analysis>
+    <CPM>
+        <Interaction default="0.0">
+            <Contact type1="medium" type2="stemCells" value="5">
+                <!--    <Disabled>
+        <HomophilicAdhesion strength="-1" adhesive="BMP"/>
+    </Disabled>
+-->
+            </Contact>
+            <Contact type1="stemCells" type2="stemCells" value="10">
+                <!--    <Disabled>
+        <HomophilicAdhesion strength="-0.25" adhesive="BMP"/>
+    </Disabled>
+-->
+            </Contact>
+        </Interaction>
+        <ShapeSurface scaling="norm">
+            <Neighborhood>
+                <Order>2</Order>
+            </Neighborhood>
+        </ShapeSurface>
+        <MonteCarloSampler stepper="edgelist">
+            <MetropolisKinetics temperature="1"/>
+            <Neighborhood>
+                <Order>2</Order>
+            </Neighborhood>
+            <MCSDuration value="1"/>
+        </MonteCarloSampler>
+    </CPM>
+</MorpheusModel>
