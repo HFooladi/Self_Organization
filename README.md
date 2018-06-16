@@ -19,6 +19,6 @@ This code base provides all the necessary pieces to reproduce the main results o
  # Simulation
  All the simulation on one cell and studying dynamical system equations have been done in python. You can refer to 'BMP_Noggin' Notebook and run the experiment for different sets of parameters and reproduce figure 3 of the paper. 
  
- All the simulations in the multicellular system have been done with Morpheus. Morpheus is user-friendly software designed for simulating and studying multicellular systems [Starruß et al. 2014](https://academic.oup.com/bioinformatics/article/30/9/1331/234757).
+ All the simulations in the multicellular system have been done with Morpheus. Morpheus is user-friendly software designed for simulating and studying multicellular systems [Starruß et al. 2014](https://academic.oup.com/bioinformatics/article/30/9/1331/234757). For running Morpheus simulation XML file is required. you can find XML files for reproducing results of the paper in Models_Morpheus folder.
     
     
