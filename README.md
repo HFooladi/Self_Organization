@@ -13,6 +13,7 @@ This code base provides all the necessary pieces to reproduce the main results o
     + [Scipy](https://www.scipy.org/)(>=1.0.0)
     + [Matplotlib](https://matplotlib.org/)(>=2.0.0)
     + [Seaborn](https://seaborn.pydata.org/)(>=0.8.0)
+    + [SALib](http://salib.github.io/SALib/)
 * Morpheus
     + [Morpheus](https://imc.zih.tu-dresden.de/wiki/morpheus/doku.php) (Morpheus 2.0 RC2 aka version 1.9.3).Morpheus is user-friendly software designed for simulating and studying multicellular systems
     
