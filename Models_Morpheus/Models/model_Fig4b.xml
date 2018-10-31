@@ -9,7 +9,7 @@ A Balance between Secreted Inhibitors and Edge Sensing Controls Gastruloid Self-
 
 Parsa Moradi
 Hossein Fooladi</Details>
-        <Title>Model_D_2500_12500</Title>
+        <Title>Model_new_paper</Title>
     </Description>
     <Global>
         <Constant symbol="a_1" value="0.1" name="BMP production"/>
@@ -18,8 +18,8 @@ Hossein Fooladi</Details>
         <Constant symbol="beta_1" value="20" name="BMP Activation"/>
         <Constant symbol="r1" value="0.1" name="BMP inhibition"/>
         <Constant symbol="r2" value="1" name="binding ratio"/>
-        <Field symbol="b" value="5 + rand_norm(0,0.3)" name="BMP">
-            <Diffusion rate="2500" unit="µm²/s"/>
+        <Field symbol="b" value="5 + rand_norm(0,1.5)" name="BMP">
+            <Diffusion rate="250" unit="µm²/s"/>
         </Field>
         <Field symbol="nog" value="isCell*(0.1+  rand_uni(0,0.005))" name="Noggin">
             <Diffusion rate="12500" unit="µm²/s"/>
@@ -27,17 +27,17 @@ Hossein Fooladi</Details>
         <Constant symbol="isCell" value="0.0"/>
         <System solver="heun" time-step="0.02">
             <DiffEqn symbol-ref="b">
-                <Expression>timeScale*(isCell*(beta_1*(b^n1)/(1 + b^n1 + nog^n1 + r1 * b^n1 * nog ^n1) - b +  a_1)- deg1*b*(1-isCell)+ rand_norm(0,noise))</Expression>
+                <Expression>timeScale*((1.0-isCell)*(beta_1*(b^n1)/(1 + b^n1 + nog^n1 + r1 * b^n1 * nog ^n1) - b +  a_1)- deg1*b*isCell+ rand_norm(0,noise))</Expression>
             </DiffEqn>
             <DiffEqn symbol-ref="nog">
-                <Expression>timeScale*(isCell*lambda*(beta_2*r2*(b^n2)/(1+r2*(b^n2))- nog +a_2) - deg2*nog*(1-isCell)+rand_norm(0,noise))
+                <Expression>timeScale*((1.0-isCell)*lambda*(beta_2*r2*(b^n2)/(1+r2*(b^n2))- nog +a_2) - deg2*nog*isCell + rand_norm(0,noise))
 </Expression>
             </DiffEqn>
             <Constant symbol="noise" value="1e-5" name="noise"/>
             <Constant symbol="n2" value="2"/>
             <Constant symbol="n1" value="2"/>
             <Constant symbol="deg1" value="0.1"/>
-            <Constant symbol="deg2" value="0.0333"/>
+            <Constant symbol="deg2" value="0.033"/>
         </System>
         <Constant symbol="lambda" value="0.4" name="degredation ratio"/>
         <Constant symbol="timeScale" value="1"/>
@@ -48,7 +48,7 @@ Hossein Fooladi</Details>
                 <Order>2</Order>
             </Neighborhood>
             <Size symbol="size" value="273, 273, 0"/>
-            <Domain boundary-type="constant">
+            <Domain boundary-type="noflux">
                 <Image path="Domain.tiff"/>
             </Domain>
             <NodeLength unit="micron" value="2"/>
@@ -63,17 +63,20 @@ Hossein Fooladi</Details>
 -->
         </Lattice>
         <SpaceSymbol symbol="l"/>
+        <MembraneLattice>
+            <Resolution value="10"/>
+            <SpaceSymbol symbol="mem"/>
+        </MembraneLattice>
     </Space>
     <Time>
         <StartTime value="0"/>
-        <StopTime symbol="end" value="60"/>
+        <StopTime symbol="end" value="30"/>
         <TimeSymbol symbol="time"/>
         <RandomSeed value="12345321"/>
     </Time>
     <CellTypes>
         <CellType class="biological" name="stemCells">
-            <Constant symbol="isCell" value="1.0"/>
-            <VolumeConstraint target="150" strength="1" name="cellVol"/>
+            <VolumeConstraint target="30" strength="1" name="cellVol"/>
             <Property symbol="avgBMP" value="0" name="average BMP in cell"/>
             <Property symbol="avgNog" value="0" name="average Noggin"/>
             <CellReporter name="Average BMP">
@@ -84,13 +87,14 @@ Hossein Fooladi</Details>
                 <Input value="nog"/>
                 <Output symbol-ref="avgNog" mapping="average"/>
             </CellReporter>
+            <Constant symbol="isCell" value="0.0"/>
         </CellType>
         <CellType class="medium" name="medium">
-            <Constant symbol="isCell" value="0.0"/>
+            <Property symbol="isCell" value="1.0"/>
         </CellType>
     </CellTypes>
     <CellPopulations>
-        <Population size="1000" type="stemCells">
+        <Population size="0" type="stemCells">
             <!--    <Disabled>
         <InitProperty symbol-ref="b">
             <Expression>0.4 +rand_norm(0,0.1)</Expression>
@@ -103,15 +107,19 @@ Hossein Fooladi</Details>
         </InitProperty>
     </Disabled>
 -->
-            <InitCircle mode="regular" random_displacement="5.0" number-of-cells="0">
-                <Dimensions radius="200" center="0.0, 0.0, 0.0"/>
+            <InitCircle mode="random" number-of-cells="800">
+                <Dimensions radius="size.x/2" center="size.x/2,size.y/2,0"/>
             </InitCircle>
+            <!--    <Disabled>
+        <InitCellLattice/>
+    </Disabled>
+-->
         </Population>
     </CellPopulations>
     <Analysis>
-        <Gnuplotter time-step="1.0">
-            <Plot>
-                <Field symbol-ref="b" min="0.0" max="10">
+        <Gnuplotter time-step="30.0" decorate="true">
+            <Plot title="BMP field concetration ">
+                <Field symbol-ref="b" min="0.0" max="12">
                     <ColorMap>
                         <Color value="0.0" color="white"/>
                         <Color value="0.2" color="light-blue"/>
@@ -123,8 +131,8 @@ Hossein Fooladi</Details>
                 </Field>
             </Plot>
             <Terminal name="png"/>
-            <Plot>
-                <Field symbol-ref="nog" min="0.0" max="10">
+            <Plot title="Noggin field concentration">
+                <Field resolution="0" symbol-ref="nog" min="0.0" max="10">
                     <ColorMap>
                         <Color value="0.0" color="white"/>
                         <Color value="0.2" color="light-blue"/>
@@ -135,8 +143,8 @@ Hossein Fooladi</Details>
                     </ColorMap>
                 </Field>
             </Plot>
-            <Plot>
-                <Cells value="avgBMP" min="0.0" max="10">
+            <Plot title="">
+                <Cells value="avgBMP" min="0.0" max="12">
                     <ColorMap>
                         <Color value="0.0" color="light-blue"/>
                         <Color value="1.0" color="red"/>
@@ -151,22 +159,27 @@ Hossein Fooladi</Details>
                         <Color value="0.0" color="light-blue"/>
                         <Color value="1.0" color="red"/>
                         <Color value="0.5" color="yellow"/>
-                        <Color value="0.7" color="orange"/>
+                        <Color value="0.7" color="green"/>
                     </ColorMap>
                 </Cells>
             </Plot>
         </Gnuplotter>
-        <!--    <Disabled>
-        <Logger time-step="10">
+        <Logger time-step="30">
             <Input>
                 <Symbol symbol-ref="b"/>
             </Input>
             <Output>
-                <TextOutput file-name="BMP" file-numbering="time" file-format="csv" file-separation="time" separator="tab"/>
+                <TextOutput file-name="BMP" file-numbering="time" file-format="csv" separator="comma" header="true"/>
             </Output>
         </Logger>
-    </Disabled>
--->
+        <Logger time-step="30">
+            <Input>
+                <Symbol symbol-ref="nog"/>
+            </Input>
+            <Output>
+                <TextOutput file-name="Nog" file-numbering="time" file-format="csv" separator="comma" header="true"/>
+            </Output>
+        </Logger>
     </Analysis>
     <CPM>
         <Interaction default="0.0">
@@ -193,7 +206,7 @@ Hossein Fooladi</Details>
             <Neighborhood>
                 <Order>2</Order>
             </Neighborhood>
-            <MCSDuration value="1"/>
+            <MCSDuration value="0.1"/>
         </MonteCarloSampler>
     </CPM>
 </MorpheusModel>
