@@ -23,3 +23,18 @@ This code base provides all the necessary pieces to reproduce the main results o
  All the simulations in the multicellular system have been done with Morpheus. Morpheus is user-friendly software designed for simulating and studying multicellular systems [Starruß et al. 2014](https://academic.oup.com/bioinformatics/article/30/9/1331/234757). For running Morpheus simulation XML file is required. you can find XML files for reproducing results of the paper in Models_Morpheus folder.
     
     
+## Citing this work
+To cite this work, please use the following BibTeX entry:
+
+```
+@article{fooladi2019enhanced,
+  title={Enhanced Waddington landscape model with cell--cell communication can explain molecular mechanisms of self-organization},
+  author={Fooladi, Hosein and Moradi, Parsa and Sharifi-Zarchi, Ali and Hosein Khalaj, Babak},
+  journal={Bioinformatics},
+  volume={35},
+  number={20},
+  pages={4081--4088},
+  year={2019},
+  publisher={Oxford University Press}
+}
+```
