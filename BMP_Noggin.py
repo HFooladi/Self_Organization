@@ -71,7 +71,6 @@ plt.ylabel('Noggin, BMP4')
 plt.legend(('Noggin', 'BMP4'))
 plt.show()
 
-
 # Plot
 plt.plot(ab[:, 0], ab[:, 1], color='gray')
 plt.xlabel('Noggin')
